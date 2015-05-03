@@ -1,0 +1,92 @@
+body
+{
+	background-color : #222;
+	color : #fff;
+	font-family: 'sans';
+}
+
+nav#main
+{
+	position : fixed;
+	top : 10px;
+	right : 10px;
+}
+
+nav#main * {
+	margin : 5px;
+}
+
+nav#main ul {
+	margin : 0;
+	padding : 0;
+}
+
+nav#main .handle
+{
+	margin : 0;
+	width : 100%;
+	height : 1em;
+	cursor: pointer;
+	background-color: #666;
+	content : '-';
+}
+
+nav#main .active.handle
+{
+	background-color: #8aa;
+	content : '+';
+}
+
+#tribeConfig input
+{
+	display: list-item;
+}
+
+.stats
+{
+	position: fixed;
+	bottom : 10px;
+	right : 10px;
+	padding : 20px;
+	width : 10em;
+}
+
+
+text
+{
+	text-anchor : middle;
+	alignment-baseline: text-before-edge;
+	fill : white;
+}
+
+#worldCreateForm
+{
+	display : none;
+	margin : 30px auto;
+	width : 20em;
+	padding : 20px;
+}
+
+.panel
+{
+	background-color: rgba(40,40,40,0.8);
+	border : 1px solid #aaa;
+}
+
+.inputList
+{
+	list-style-type: none;
+	padding : 0;
+	margin : 0;
+}
+
+.inputList li
+{
+	margin-top : 10px;
+}
+
+.inputList li label
+{
+	width : 10em;
+	display : inline-block;
+}
