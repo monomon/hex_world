@@ -1,0 +1,21 @@
+{
+  "name": "hex_world",
+  "version": "0.1.0",
+  "authors": [
+    "Mois Moshev <mois@monomon.me>"
+  ],
+  "description": "An artificial life simulation",
+  "main": ["hex_world.js", "hex_grid.js", "tribe.js", "utils.js"],
+  "keywords": [
+    "simulation",
+    "life",
+    "games",
+    "growth"
+  ],
+  "license": "Artistic",
+  "homepage": "http://monomon.me/hex_world",
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "svg.js": "https://github.com/wout/svg.js.git#~1.0.1"
+  }
+}

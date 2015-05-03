@@ -1,0 +1,21 @@
+{
+  "name": "hex_world",
+  "version": "0.1.0",
+  "authors": [
+    "Mois Moshev <mois@monomon.me>"
+  ],
+  "description": "An artificial life simulation",
+  "keywords": [
+    "simulation",
+    "life",
+    "games",
+    "growth"
+  ],
+  "license": "Artistic",
+  "homepage": "http://monomon.me/hex_world",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-uglify": "^0.9.1"
+  }
+}

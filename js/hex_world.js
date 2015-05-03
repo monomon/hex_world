@@ -83,13 +83,14 @@ var HexWorld = {
 	 * @param {Number} time
 	 */
 	update : function(time) {
+		var tribe;
 		for (var i = 0; i < this.tribes.length; i++) {
-			var tribe = this.tribes[i];
+			tribe = this.tribes[i];
 			tribe.decide(time);
 		}
 
 		for (var i = 0; i < this.tribes.length; i++) {
-			var tribe = this.tribes[i];
+			tribe = this.tribes[i];
 			if (tribe.population <= 0) {
 				tribe.die();
 				this.removeTribe(tribe);
