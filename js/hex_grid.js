@@ -23,7 +23,7 @@ var HexGrid = {
 
 		this.hexBounds = hexBounds(this.tileRadius);
 
-		this.ctx = SVG('hex');
+		this.ctx = SVG(config.elId);
 
 		this.tilesGroup = this.ctx.group();
 		this.tilesGroup.addClass('tilesGroup');

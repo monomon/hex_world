@@ -2,6 +2,8 @@
 
 An artificial life simulator
 
+[live demo](http://monomon.me/hex_world)
+
 ## Introduction
 
 The hex_world consists of a hexagonal grid. Every tile has a yield value - how much 'food' it provides. This is randomly determined at initialization time.

@@ -123,7 +123,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		height : 20, // tiles
 		tileRadius : 30, // px
 		numTribes : 36,
-		wrapX : true
+		wrapX : true,
+		elId : 'hex'
 	};
 
 	var fieldNames = ['width', 'height', 'tileRadius', 'numTribes'];
