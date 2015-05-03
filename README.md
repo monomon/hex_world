@@ -19,3 +19,4 @@ Tribes are initially placed randomly on the map. They aim to maximize their gain
 * bug where tribes colonize on tiles 1 tile away - should be only immediate neighbors
 * plot populations against time
 * implement violence
+* better terrain generation, use Perlin noise or smth

@@ -36,7 +36,7 @@ module.exports = function (grunt) {
 		},
 		// package for deployment
 		copy: {
-			main: {
+			package: {
 				files: [
 					{
 						expand: true,
@@ -69,5 +69,5 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	grunt.registerTask('default', ['jshint:beforeconcat', 'uglify', 'jshint:afterconcat']);
-	grunt.registerTask('dist', ['default', 'copy']);
+	grunt.registerTask('dist', ['default', 'copy:package']);
 };
