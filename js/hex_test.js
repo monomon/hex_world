@@ -5,7 +5,8 @@ function testWorldWrap ()
 		height : 20, // tiles
 		tileRadius : 30, // px
 		numTribes : 30,
-		wrapX : true
+		wrapX : true,
+		elId : 'hex'
 	});
 
 	console.assert(world.tribes.length == 30);
@@ -62,7 +63,8 @@ function testWorldNoWrap()
 		height : 20, // tiles
 		tileRadius : 30, // px
 		numTribes : 30,
-		wrapX : false
+		wrapX : false,
+		elId : 'hex'
 	});
 
 	var testData = [{

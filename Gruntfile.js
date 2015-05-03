@@ -18,11 +18,11 @@ module.exports = function (grunt) {
 				}
 			},
 			beforeconcat : ['js/*.js'],
-			afterconcat : ['js/build/*.js'],
+			afterconcat : ['js/dist/*.js'],
 		},
 		uglify: {
 			options : {
-				banner : '/* hex_world: */\n'
+				banner : '/*\n<%= pkg.name %>\n<%= pkg.authors %>\n*/\n'
 			},
 			build : {
 				src : [
@@ -31,14 +31,43 @@ module.exports = function (grunt) {
 				'js/hex_world.js',
 				'js/tribe.js'
 				],
-				dest : 'js/build/hex_world.min.js'
+				dest : 'js/dist/hex_world.min.js'
 			}
 		},
-  // Arbitrary non-task-specific properties.
-  my_property: 'whatever',
-  my_src_files: ['foo/*.js', 'bar/*.js'],
-});
-grunt.loadNpmTasks('grunt-contrib-jshint');
-grunt.loadNpmTasks('grunt-contrib-uglify');
-grunt.registerTask('default', ['jshint:beforeconcat', 'uglify', 'jshint:afterconcat']);
+		// package for deployment
+		copy: {
+			main: {
+				files: [
+					{
+						expand: true,
+						src: ['js/dist/*'],
+						dest: 'dist/'
+					}, {
+						expand: true,
+						src: ['js/hex_test.js'],
+						dest: 'dist/'
+					}, {
+						expand: true,
+						flatten: true,
+						src: [
+							'bower_components/jquery/dist/jquery.min.js',
+							'bower_components/svg.js/dist/svg.js'
+						],
+						dest: 'dist/vendor/'
+					}, {
+						expand: true,
+						src: ['index.html', 'hex.css'],
+						dest: 'dist'
+					}
+				]
+			}
+		}
+	});
+
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-copy');
+
+	grunt.registerTask('default', ['jshint:beforeconcat', 'uglify', 'jshint:afterconcat']);
+	grunt.registerTask('dist', ['default', 'copy']);
 };
