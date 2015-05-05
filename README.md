@@ -1,3 +1,5 @@
+![Image Alt](http://monomon.me/hex_world/hex_world.png)
+
 # hex_world
 
 An artificial life simulation
