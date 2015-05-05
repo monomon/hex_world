@@ -40,19 +40,20 @@ module.exports = function (grunt) {
 				files: [
 					{
 						expand: true,
+						flatten: true,
 						src: ['js/dist/*'],
-						dest: 'dist/'
+						dest: 'dist/js/'
 					}, {
 						expand: true,
 						flatten: true,
-						src: ['js/hex_test.js'],
-						dest: 'dist/'
+						src: ['js/hex_test.js', 'js/hex_demo.js'],
+						dest: 'dist/js/'
 					}, {
 						expand: true,
 						flatten: true,
 						src: [
 							'bower_components/jquery/dist/jquery.min.js',
-							'bower_components/svg.js/dist/svg.js'
+							'bower_components/svg.js/dist/svg.min.js'
 						],
 						dest: 'dist/vendor/'
 					}, {
