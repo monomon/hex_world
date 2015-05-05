@@ -22,7 +22,7 @@ module.exports = function (grunt) {
 		},
 		uglify: {
 			options : {
-				banner : '/*\n<%= pkg.name %>\n<%= pkg.authors %>\n*/\n'
+				banner : '/*\n<%= pkg.name %>\n<%= pkg.authors %>\n<%= grunt.template.today("yyyy-mm-dd") %>\n*/\n'
 			},
 			build : {
 				src : [
@@ -44,6 +44,7 @@ module.exports = function (grunt) {
 						dest: 'dist/'
 					}, {
 						expand: true,
+						flatten: true,
 						src: ['js/hex_test.js'],
 						dest: 'dist/'
 					}, {
@@ -68,6 +69,6 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 
-	grunt.registerTask('default', ['jshint:beforeconcat', 'uglify', 'jshint:afterconcat']);
+	grunt.registerTask('default', ['jshint:beforeconcat', 'uglify']);
 	grunt.registerTask('dist', ['default', 'copy:package']);
 };
