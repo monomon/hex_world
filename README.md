@@ -23,10 +23,12 @@ Tribes grow depending on their population and yield of the tile they are on. Gro
 
 ![growth plot](http://monomon.me/hex_world/growthplot.png)
 
+Growth is a factor by which the population changes. e.g. a growth of 1 means 100% population increase.
+
 Growth parameters can be controlled via the provided GUI or set directly on the corresponding classes (e.g. HexWorld, Tribe).
 
-Looking at the graph, one could argue that more population in fact leads to slower growth (e.g. due to resource depletion), but also more production capacity.
-If these two effects cancel each other, then population size might not matter. This should be made configurable in the future.
+Looking at the graph, one could argue that more population in fact leads to lower growth (e.g. due to resource depletion). On the flipside, this also leads to more production capacity.
+If these two effects cancel each other, then population size might not matter. The growth function should be made configurable in the future.
 
 ## Usage
 
