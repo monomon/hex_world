@@ -1,4 +1,4 @@
-![Image Alt](http://monomon.me/hex_world/hex_world.png)
+![hex world](http://monomon.me/hex_world/hex_world.png)
 
 # hex_world
 
@@ -8,15 +8,25 @@ An artificial life simulation
 
 ## Introduction
 
-The hex_world consists of a hexagonal grid. Every tile has a yield value - how much 'food' it provides. This is randomly determined at initialization time.
+hex_world is a 'zero-player' game. Automated agents run around in this world, trying to achieve better conditions. Patterns emerge that depend on how the terrain is configured.
 
-Tribes are initially placed randomly on the map. They aim to maximize their gain by moving to 'higher ground' or by colonizing neighboring tiles.
+The hex_world consists of a hexagonal grid. Every tile has a yield value - how much 'food' it provides. This is randomly determined at initialization time and displayed by coloring the tiles in grayscale - the amount of food produced on the tile is proportional to the color value, the higher the yield the lighter the tile.
+
+Tribes are initially placed randomly on the map and drawn as colored hexagons. They aim to maximize their gain by moving to 'higher ground' or by colonizing neighboring tiles.
+
+In the original simulation, color hue determined the 'culture' of a tribe. Tribes with similar cultures would be more likely to cooperate (e.g. share food). This is still TODO.
+
 
 ## Growth
 
 Tribes grow depending on their population and yield of the tile they are on. Growth is calculated from a [Generalised logistic function](https://en.wikipedia.org/wiki/Generalised_logistic_function).
 
+![growth plot](http://monomon.me/hex_world/growthplot.png)
+
 Growth parameters can be controlled via the provided GUI or set directly on the corresponding classes (e.g. HexWorld, Tribe).
+
+Looking at the graph, one could argue that more population in fact leads to slower growth (e.g. due to resource depletion), but also more production capacity.
+If these two effects cancel each other, then population size might not matter. This should be made configurable in the future.
 
 ## Usage
 
@@ -38,7 +48,7 @@ To create a new world, simply call
 		outputEl : document.querySelector('.stats')
 	});
 
-Controls are created separately, to make it easier to create standalone worlds, and to make the connection with the world looser.
+Controls are created separately, to make it easier to create standalone worlds, and to make the coupling with the world looser.
 
 ## Drawing
 
@@ -47,6 +57,7 @@ Controls are created separately, to make it easier to create standalone worlds, 
 ## TODO
 
 * bug where tribes colonize on tiles 1 tile away - should be only immediate neighbors
-* plot populations against time
+* plot populations and other parameters against time
 * implement violence
+* implement cooperation - similar 'cultures' (i.e. how close their hues are)
 * better terrain generation, use Perlin noise or smth

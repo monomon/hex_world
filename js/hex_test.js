@@ -47,12 +47,16 @@ function testWorldWrap ()
 			neighbors[j].el.style({
 				fill : '#abc'
 			});
+			// check that distance is kept
+			console.assert(Math.abs(neighbors[j].gridPos[0] - tile.gridPos[0]) <= 1 ||
+				Math.abs(neighbors[j].gridPos[0] + world.grid.width - tile.gridPos[0]) <= 1);
+			console.assert(Math.abs(neighbors[j].gridPos[1] - tile.gridPos[1]) <= 1);
 		}
 
 		console.assert(neighbors.length == testData[i].numNeighbors, 'Number of neighbors should be ' + testData[i].numNeighbors + ' but is ' + neighbors.length + ' for index ' + testData[i].index);
 	}
 
-	console.log('test complete');
+	console.log('testWorldWrap test complete');
 }
 
 function testWorldNoWrap()
@@ -108,7 +112,7 @@ function testWorldNoWrap()
 		console.assert(neighbors.length == testData[i].numNeighbors, 'Number of neighbors should be ' + testData[i].numNeighbors + ' but is ' + neighbors.length + ' for index ' + testData[i].index);
 	}
 
-	console.log('test complete');
+	console.log('testWorldNoWrap test complete');
 }
 
 document.addEventListener('DOMContentLoaded', function () {

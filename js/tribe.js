@@ -41,6 +41,8 @@ var Tribe = {
 		this.mask.transform({
 			x : 0, y : 0
 		});
+
+		this.markNeighbors();
 		
 
 		return this;
@@ -73,6 +75,7 @@ var Tribe = {
 		});
 
 		if (this.showTextFlag) this.text.text(this.getText());
+		this.markNeighbors();
 	},
 
 	/**
@@ -185,7 +188,6 @@ var Tribe = {
 	 */
 	die : function ()
 	{
-		// this.unmarkNeighbors();
 		if (this.neighborsGroup) {
 			this.neighborsGroup.remove();
 		}
