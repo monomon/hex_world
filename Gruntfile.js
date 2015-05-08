@@ -41,12 +41,7 @@ module.exports = function (grunt) {
 					{
 						expand: true,
 						flatten: true,
-						src: ['js/dist/*'],
-						dest: 'dist/js/'
-					}, {
-						expand: true,
-						flatten: true,
-						src: ['js/hex_test.js', 'js/hex_demo.js'],
+						src: ['js/dist/*', 'js/hex_demo.js'],
 						dest: 'dist/js/'
 					}, {
 						expand: true,
@@ -63,12 +58,18 @@ module.exports = function (grunt) {
 					}
 				]
 			}
+		},
+
+		clean: {
+			build : ['js/dist'],
+			dist : ['dist']
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 
 	grunt.registerTask('default', ['jshint:beforeconcat', 'uglify']);
 	grunt.registerTask('dist', ['default', 'copy:package']);
