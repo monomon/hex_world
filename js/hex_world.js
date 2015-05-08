@@ -22,7 +22,7 @@ var HexWorld = {
 		this.tribes = [];
 
 		for (var i = 0; i < config.numTribes; i++) {
-			this.addTribe(Object.create(Tribe).init(this.createRandomTribe()));
+			this.addTribe(this.createRandomTribe());
 		}
 	},
 
@@ -31,12 +31,12 @@ var HexWorld = {
 	 */
 	createRandomTribe : function()
 	{
-		return {
-			population : Math.floor((((0.5 + Math.random())*0.5)*this.populationInitModifier)),
+		return Object.create(Tribe).init({
+			population : this.getRandomPopulation(),
 			culture : Math.random(),
 			tile : this.getRandomUnoccupiedTile(),
 			world : this
-		};
+		});
 	},
 
 	addTribe : function(tribe)
@@ -73,6 +73,11 @@ var HexWorld = {
 		}
 
 		return tile;
+	},
+
+	getRandomPopulation : function()
+	{
+		return Math.floor((((0.5 + Math.random())*0.5)*this.populationInitModifier));
 	},
 
 	/**
@@ -133,7 +138,7 @@ var HexWorld = {
 		this.grid.ctx.clear();
 		this.grid.tiles = [];
 		this.tribes = [];
-		this.tileElToTribe.clear();
+		this.tileElToTribe = undefined;
 		this.grid.ctx.node.remove();
 	}
 };

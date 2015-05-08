@@ -1,12 +1,43 @@
 /**
+ * Represends a tile on the map
+ * 
+ */
+var Tile = {
+	/**
+	 * Initialize with the passed config object
+	 * @param {Object} config
+	 */
+	init : function(config)
+	{
+		this.value = config.value;
+		this.gridPos = config.gridPos;
+		this.el = config.el;
+
+		return this;
+	},
+
+};
+
+/**
  * HexGrid represents the grid
  * has width and height (in number of tiles), tile radius,
- * also represents terrain, so a tile has a 'value'
+ * also represents terrain, so a tile has a 'value'.
+ *
+ * The tiles are kept in a one-dimensional array.
+ * Rows are wrapped by {@link HexGrid.width} when drawing and when two-dimensional coordinates
+ * are needed.
+ *
  */
 var HexGrid = {
 	propsToCopy : ['width', 'height', 'tileRadius', 'wrapX'],
 	tileStroke : '#ffffff',
 
+	/**
+	 * Initialize the grid based on the passed configuration
+	 * This creates the SVG context, calculates some properties,
+	 * and adds up all tiles.
+	 * @param {Object} config
+	 */
 	init : function(config)
 	{
 		// copy over properties... maybe try with ES6 classes
@@ -41,24 +72,21 @@ var HexGrid = {
 		this.tiles = [];
 
 		for (var i=0; i<this.width*this.height; i++) {
-			this.addTile(i);
+			this.createTile(i);
 		}
 
 		return this;
 	},
 
-	addTile : function(i)
+	/**
+	 * Add a tile for the given index
+	 * @param {Number} i index of the tile. This is used for calculations,
+	 * tile will actually be pushed at the end of the array. FIXME
+	 * @return {Number} the new number of tiles
+	 */
+	createTile : function(i)
 	{
-		var rand = Math.random();
-		var tile = {
-			value : Math.floor(rand*200 + ((rand > 0.5) ? 55 : Math.random()*25)),
-			gridPos : [
-				i % this.width,
-				Math.floor(i / this.width)
-			]
-		};
-
-		tile.el = this.drawTile(tile);
+		var tile = this.createRandomTile(i);
 
 		var numTiles = this.tiles.push(tile);
 
@@ -70,6 +98,8 @@ var HexGrid = {
 	/**
 	 * Create tile svg element
 	 * and apply default styling
+	 * @param {Tile} tile
+	 * @return {Element} the hex SVG element
 	 */
 	drawTile : function(tile)
 	{
@@ -93,10 +123,15 @@ var HexGrid = {
 		});
 	},
 
+	/**
+	 * Convert grid to screen coordinates
+	 * @param {Array} gridPos An array containing the two grid coordinates
+	 * @return {Array} array containing screen coordinates
+	 */
 	gridToCoords : function(gridPos)
 	{
 		// odd rows are indented by half a width
-		// ideally we'd use radial positions here...
+		// ideally we'd use radial positions here but for now, hack...
 		var bias = ((gridPos[1] % 2) !== 0) ? 0.5 : 0;
 		return [
 			(gridPos[0] % this.width + bias + 0.5) * this.hexBounds.width + 1,
@@ -104,15 +139,42 @@ var HexGrid = {
 		];
 	},
 
+	/**
+	 * Obtain a random tile from the array.
+	 * @return {Tile}
+	 */
 	getRandomTile : function()
 	{
 		return this.tiles[Math.floor(Math.random()*(this.tiles.length))];
 	},
 
+	/**
+	 * there's a circular dependency here that needs fixing
+	 * @param {Number} i index used for some calculations
+	 * @return {Tile}
+	 */
+	createRandomTile : function(i)
+	{
+		var rand = Math.random();
+		var tile = Object.create(Tile).init({
+			value : Math.floor(rand*200 + ((rand > 0.5) ? 55 : Math.random()*25)),
+			gridPos : [
+				i % this.width,
+				Math.floor(i / this.width)
+			]
+		});
+
+		tile.el = this.drawTile(tile);
+
+		return tile;
+	},
 
 	/**
 	 * return all tiles around the passed tile
 	 * works with wraparound, apparently
+	 *
+	 * @param {Tile} centerTile tile whose neighbors to find
+	 * @return {Tile[]} array of the surounding tiles
 	 */
 	getNeighbors : function(centerTile)
 	{

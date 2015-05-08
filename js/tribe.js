@@ -1,9 +1,18 @@
+/**
+ * A tribe is an automated agent that lives on a two-dimensional map
+ * Its population can grow or shrink depending on the conditions.
+ * It knows how to draw itself, but most importantly it can decide on an action every tick.
+ * If certain conditions are met, the tribe may decide to {@link #colonize} a neighboring tile.
+ * Otherwise, the tribe may decide to {@link #move} to a better spot. A random move may be taken if the tribe 'panics', meaning its {@link #temperature} goes over a certain limit. The temperature is reset after an action is performed. How long it takes before the tribe panics depends on its {@link #patience}.
+ * 
+ */
 var Tribe = {
 	maxGrowth : 1.1,
 	maxStarve : -0.9,
 	growthRate : 1.5,
 	growthAsymptote : 0.50,
 	decisionPeriod : 1500,
+	colonyPopulationFraction : 0.3,
 	maxPatience : 500,
 	showTextFlag : false,
 
@@ -11,6 +20,7 @@ var Tribe = {
 	 * Initialize tribe
 	 * copy some properties from configuration
 	 * set some defaults
+	 * @param {Object} config
 	 */
 	init : function (config)
 	{
@@ -33,7 +43,7 @@ var Tribe = {
 
 		var position = this.world.grid.gridToCoords(this.tile.gridPos);
 
-		this.text.y(-this.world.grid.hexBounds.height/3);
+		// this.text.y(-this.world.grid.hexBounds.height/3);
 		this.group.transform({
 			x : position[0],
 			y : position[1]
@@ -72,11 +82,11 @@ var Tribe = {
 		});
 
 		if (this.showTextFlag) this.text.text(this.getText());
-		this.markNeighbors();
 	},
 
 	/**
 	 * Get the tribe's text to be shown on top of its tile
+	 * @return {String}
 	 */
 	getText : function()
 	{
@@ -133,7 +143,8 @@ var Tribe = {
 
 		var neighbors = this.getNeighbors();
 		var tribe = this;
-		neighbors.reduce(function (previous, item) {
+
+		gains = neighbors.reduce(function (previous, item) {
 			if (previous && item.value) {
 				previous.push({
 					gain : tribe.calculateGain(item),
@@ -159,7 +170,7 @@ var Tribe = {
 					continue;
 				}
 
-				if (gains[i].gain > currentGain || Math.random() > 0.8) {
+				if ((gains[i].gain > currentGain) || Math.random() > 0.8) {
 					// console.log(gains[i].tile);
 					// console.log(this.tile);
 					this.move(gains[i].tile);
@@ -168,7 +179,9 @@ var Tribe = {
 					return;
 				}
 
-				if (this.population >= HexWorld.maxPopulation*0.9) {
+				if ((this.population >= HexWorld.maxPopulation*0.7) ||
+					gains[i].gain >= currentGain
+				) {
 					this.colonize(gains[i].tile);
 					this.lastDecision = time;
 					this.temperature = 0;
@@ -193,29 +206,33 @@ var Tribe = {
 
 	/**
 	 * Move tribe to a tile
-	 * @param {Object} targetTile
+	 * @param {Tile} targetTile
 	 */
 	move : function (targetTile)
 	{
 		console.assert(this.tile !== targetTile);
 		console.assert(!this.world.tileElToTribe.has(targetTile.el));
+
 		this.tile.el.removeClass('occupied');
+		// FIXME
 		this.world.tileElToTribe.delete(this.tile.el);
 
 		var newPos = this.world.grid.gridToCoords(targetTile.gridPos);
 
+		// move the actual elements
 		this.group.transform({
 			x : newPos[0],
 			y : newPos[1]
 		});
 
 		this.tile = targetTile;
+		// FIXME: this coupling sucks
 		this.world.tileElToTribe.set(this.tile.el, this);
 	},
 
 	/**
 	 * Colonize a tile
-	 * @param {Object} targetTile
+	 * @param {Tile} targetTile
 	 */
 	colonize : function (targetTile)
 	{
@@ -223,12 +240,11 @@ var Tribe = {
 		console.assert(!this.world.tileElToTribe.has(targetTile.el));
 		// console.log('colonizing from ' + this.tile.gridPos.toString() + ' to ' + targetTile.gridPos.toString());
 
-		// this.unmarkNeighbors();
 		var config = Object.create(this.lastConfig);
 		
 		config.tile = targetTile;
 		config.world = this.world;
-		config.population = Math.floor(0.3 * this.population);
+		config.population = Math.floor(Tribe.colonyPopulationFraction * this.population);
 		config.culture = this.culture;
 		config.patience = this.patience;
 		config.temperature = 0;
@@ -237,7 +253,7 @@ var Tribe = {
 
 		this.world.addTribe(colony);
 		colony.draw();
-		this.population = Math.floor(0.7 * this.population);
+		this.population = Math.floor((1 - Tribe.colonyPopulationFraction) * this.population);
 	},
 
 	/**
@@ -269,12 +285,17 @@ var Tribe = {
 
 	/**
 	 * TODO: cache neighbours and invalidate only on actions
+	 * @return {Tile[]} the neighbouring tiles
 	 */
 	getNeighbors : function ()
 	{
 		return this.world.grid.getNeighbors(this.tile);
 	},
 
+	/**
+	 * Mark neighbors - this is mostly used for debugging atm, but
+	 * should become a regular feature
+	 */
 	markNeighbors : function ()
 	{
 
@@ -282,8 +303,6 @@ var Tribe = {
 
 		if (!this.neighborsGroup) {
 			this.neighborsGroup = this.world.grid.ctx.group();			
-		} else if (this.neighborsGroup.children().length > 0) {
-			return neighbors;
 		}
 
 		for (var j = 0; j < neighbors.length; j++) {
@@ -294,7 +313,7 @@ var Tribe = {
 				this.neighborsGroup.addClass('neighborOverlay');
 				this.neighborsGroup.add(overlay);
 				overlay.style({
-					fill : '#511',
+					fill : '#a11',
 					opacity : 0.2
 				});
 			} else {
@@ -303,6 +322,9 @@ var Tribe = {
 		}
 	},
 
+	/**
+	 * unmark neighboring tiles by clearing the svg group
+	 */
 	unmarkNeighbors : function ()
 	{
 		if (this.neighborsGroup) {
