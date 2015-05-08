@@ -14,20 +14,21 @@ The hex_world consists of a hexagonal grid. Every tile has a yield value - how m
 
 Tribes are initially placed randomly on the map and drawn as colored hexagons. They aim to maximize their gain by moving to 'higher ground' or by colonizing neighboring tiles.
 
-In the original simulation, color hue determined the 'culture' of a tribe. Tribes with similar cultures would be more likely to cooperate (e.g. share food). This is still TODO.
+In the original simulation, color hue corresponded to the 'culture' of a tribe. Tribes with similar cultures would be more likely to cooperate (e.g. share food). This is still TODO.
 
 
 ## Growth
 
-Tribes grow depending on their population and yield of the tile they are on. Growth is calculated from a [Generalised logistic function](https://en.wikipedia.org/wiki/Generalised_logistic_function).
+Tribes grow depending on their population and yield of the tile they are on. Growth is calculated from a [Generalised logistic function](https://en.wikipedia.org/wiki/Generalised_logistic_function) in which 'time' is `(population + yield)/2`.
 
+This results in the following distribution of growth:
 ![growth plot](http://monomon.me/hex_world/growthplot.png)
 
-Growth is a factor by which the population changes. e.g. a growth of 1 means 100% population increase.
+Growth is a factor by which the population changes on every tick. e.g. a growth of 1 means 100% population increase.
 
-Growth parameters can be controlled via the provided GUI or set directly on the corresponding classes (e.g. HexWorld, Tribe).
+Growth parameters can be controlled via the provided GUI or set directly on the corresponding classes (e.g. HexWorld, Tribe).  Generally they can be changed at runtime, though this part may need more work.
 
-Looking at the graph, one could argue that more population in fact leads to lower growth (e.g. due to resource depletion). On the flipside, this also leads to more production capacity.
+Looking at the growth graph, one could argue that more population in fact leads to lower growth (e.g. due to resource depletion). On the flipside, this also leads to more production capacity.
 If these two effects cancel each other, then population size might not matter. The growth function should be made configurable in the future.
 
 ## Usage
@@ -63,3 +64,5 @@ Controls are created separately, to make it easier to create standalone worlds, 
 * implement violence
 * implement cooperation - similar 'cultures' (i.e. how close their hues are)
 * better terrain generation, use Perlin noise or smth
+* change growth function (at runtime)
+* record and playback

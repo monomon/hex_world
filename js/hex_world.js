@@ -133,6 +133,7 @@ var HexWorld = {
 		this.grid.ctx.clear();
 		this.grid.tiles = [];
 		this.tribes = [];
+		this.tileElToTribe.clear();
 		this.grid.ctx.node.remove();
 	}
 };

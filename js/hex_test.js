@@ -1,156 +1,139 @@
-function testWorldWrap ()
-{
-	var world = Object.create(HexWorld).init({
-		width : 20, // tiles
-		height : 20, // tiles
-		tileRadius : 30, // px
-		numTribes : 30,
-		wrapX : true,
-		elId : 'hex'
-	});
-
-	console.assert(world.tribes.length == 30);
-	console.assert(document.querySelectorAll('.occupied').length == world.tribes.length);
-	console.assert(world.grid.tiles.length == world.grid.width*world.grid.height);
-
-	var testData = [{
-		index : 0,
-		numNeighbors : 4
-	}, {
-		index : world.grid.width*2 + 3,
-		numNeighbors : 6
-	}, {
-		index : 10,
-		numNeighbors : 4
-	}, {
-		index : world.grid.width*4,
-		numNeighbors : 6
-	}, {
-		index : world.grid.width*14 + 10,
-		numNeighbors : 6
-	}, {
-		// this shows a bug in the neighbor algorithm... needs to be fixed
-		index : (world.grid.height-1)*world.grid.width + 19,
-		numNeighbors : 4
-	}];
-
-	for (var i = 0; i < testData.length; i++) {
-		var tile = world.grid.tiles[testData[i].index];
-		var neighbors = world.grid.getNeighbors(tile);
-
-		// highlight tile and neighbors
-		tile.el.style({
-			fill : '#f00'
-		});
-
-		for (var j = 0; j < neighbors.length; j++) {
-			neighbors[j].el.style({
-				fill : '#abc'
-			});
-			// check that distance is kept
-			console.assert(Math.abs(neighbors[j].gridPos[0] - tile.gridPos[0]) <= 1 ||
-				Math.abs(neighbors[j].gridPos[0] + world.grid.width - tile.gridPos[0]) <= 1);
-			console.assert(Math.abs(neighbors[j].gridPos[1] - tile.gridPos[1]) <= 1);
-		}
-
-		console.assert(neighbors.length == testData[i].numNeighbors, 'Number of neighbors should be ' + testData[i].numNeighbors + ' but is ' + neighbors.length + ' for index ' + testData[i].index);
-	}
-
-	console.log('testWorldWrap test complete');
-}
-
-function testWorldNoWrap()
-{
-
-	var world = Object.create(HexWorld).init({
-		width : 20, // tiles
-		height : 20, // tiles
-		tileRadius : 30, // px
-		numTribes : 30,
-		wrapX : false,
-		elId : 'hex'
-	});
-
-	var testData = [{
-		index : 0,
-		numNeighbors : 2
-	}, {
-		index : world.grid.width*2 + 3,
-		numNeighbors : 6
-	}, {
-		index : 10,
-		numNeighbors : 4
-	}, {
-		index : world.grid.width*4,
-		numNeighbors : 3
-	}, {
-		index : world.grid.width*14 + 10,
-		numNeighbors : 6
-	}, {
-		index : world.grid.width*(world.grid.height-1),
-		numNeighbors : 3
-	}, {
-		index : (world.grid.height-1)*world.grid.width + 19,
-		numNeighbors : 2
-	}];
-
-	for (var i = 0; i < testData.length; i++) {
-		var tile = world.grid.tiles[testData[i].index];
-		var neighbors = world.grid.getNeighbors(tile);
-
-		// highlight tile and neighbors
-		tile.el.style({
-			fill : '#f00'
-		});
-
-		for (var j = 0; j < neighbors.length; j++) {
-			neighbors[j].el.style({
-				fill : '#abc'
-			});
-		}
-
-		console.assert(neighbors.length == testData[i].numNeighbors, 'Number of neighbors should be ' + testData[i].numNeighbors + ' but is ' + neighbors.length + ' for index ' + testData[i].index);
-	}
-
-	console.log('testWorldNoWrap test complete');
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-	'use strict';
-	var rootEl = document.getElementById('hex');
-	testWorldWrap();
-	rootEl.removeChild(rootEl.querySelector('svg'));
-	testWorldNoWrap();
-	rootEl.removeChild(rootEl.querySelector('svg'));
-
-	/* default config */
-	var config = {
-		width : 20, // tiles
-		height : 20, // tiles
-		tileRadius : 30, // px
-		numTribes : 36,
-		wrapX : true,
-		elId : 'hex'
+describe('hex_world', function() {
+	var world;
+	var defaultConfig = {
+			width : 20, // tiles
+			height : 20, // tiles
+			tileRadius : 30, // px
+			numTribes : 30,
+			wrapX : true,
+			elId : 'hex'
 	};
 
-	var fieldNames = ['width', 'height', 'tileRadius', 'numTribes'];
+	beforeEach(function() {
+		// create element in which svg will be inserted
+		var rootEl = document.createElement('div');
+		rootEl.id = 'hex';
+		document.documentElement.appendChild(rootEl);
 
-	for (var i = 0; i < fieldNames.length; i++) {
-		var param = getParameterByName(fieldNames[i]);
-
-		if (param) {
-			config[fieldNames[i]] = param;
-		}
-	}
-
-	var wrapX = getParameterByName('wrapX') == 'on';
-	config.wrapX = wrapX;
-
-	var world = Object.create(HexWorld).init(config);
-
-	var controls = Object.create(WorldControls).init({
-		world : world,
-		rootEl : document.querySelector('nav#main'),
-		outputEl : document.querySelector('.stats')
 	});
+
+	afterEach(function() {
+		world.clear();
+	});
+
+	it('initializes correctly', function() {
+		world = Object.create(HexWorld).init(defaultConfig);
+		expect(world.tribes.length).toEqual(30);
+		expect(world.tribes.length).toEqual(document.querySelectorAll('.occupied').length);
+		expect(world.grid.tiles.length).toEqual(world.grid.width*world.grid.height);
+	});
+
+	describe('neighbors found correctly', function() {
+		it('grid works with wraparound', function() {
+			var testData = [{
+				index : 0,
+				numNeighbors : 4
+			}, {
+				index : defaultConfig.width*2 + 3,
+				numNeighbors : 6
+			}, {
+				index : 10,
+				numNeighbors : 4
+			}, {
+				index : defaultConfig.width*4,
+				numNeighbors : 6
+			}, {
+				index : defaultConfig.width*14 + 10,
+				numNeighbors : 6
+			}, {
+				// this shows a bug in the neighbor algorithm... needs to be fixed
+				index : (defaultConfig.height-1)*defaultConfig.width + 19,
+				numNeighbors : 4
+			}];
+
+
+			world = Object.create(HexWorld).init(defaultConfig);
+
+			for (var i = 0; i < testData.length; i++) {
+				var tile = world.grid.tiles[testData[i].index];
+				var neighbors = world.grid.getNeighbors(tile);
+
+				console.log('current position ' + tile.gridPos);
+
+				// highlight tile and neighbors
+				tile.el.style({
+					fill : '#f00'
+				});
+
+				for (var j = 0; j < neighbors.length; j++) {
+					neighbors[j].el.style({
+						fill : '#abc'
+					});
+					console.log('comparing against ' + neighbors[j].gridPos);
+					// check that distance is kept
+					// consider wraparound case
+					expect(
+						Math.min(
+							Math.abs(tile.gridPos[0] - neighbors[j].gridPos[0]),
+							defaultConfig.width - Math.abs(tile.gridPos[0] - neighbors[j].gridPos[0])
+						)
+					).not.toBeGreaterThan(1);
+				}
+
+				expect(neighbors.length).toEqual(testData[i].numNeighbors);
+			}	
+		});
+
+		it('grid works without wraparound', function() {
+			var testData = [{
+				index : 0,
+				numNeighbors : 2
+			}, {
+				index : defaultConfig.width*2 + 3,
+				numNeighbors : 6
+			}, {
+				index : 10,
+				numNeighbors : 4
+			}, {
+				index : defaultConfig.width*4,
+				numNeighbors : 3
+			}, {
+				index : defaultConfig.width*14 + 10,
+				numNeighbors : 6
+			}, {
+				index : defaultConfig.width*(defaultConfig.height-1),
+				numNeighbors : 3
+			}, {
+				index : (defaultConfig.height-1)*defaultConfig.width + 19,
+				numNeighbors : 2
+			}];
+
+
+			var config = Object.create(defaultConfig);
+			config.wrapX = false;
+			world = Object.create(HexWorld).init(config);
+
+			for (var i = 0; i < testData.length; i++) {
+				var tile = world.grid.tiles[testData[i].index];
+				var neighbors = world.grid.getNeighbors(tile);
+
+				// highlight tile and neighbors
+				tile.el.style({
+					fill : '#f00'
+				});
+
+				for (var j = 0; j < neighbors.length; j++) {
+					neighbors[j].el.style({
+						fill : '#abc'
+					});
+					// check that distance is kept
+					expect(Math.abs(neighbors[j].gridPos[0] - tile.gridPos[0])).not.toBeGreaterThan(1);
+				}
+
+				expect(neighbors.length).toEqual(testData[i].numNeighbors);
+			}	
+		});
+
+	});
+
 });
