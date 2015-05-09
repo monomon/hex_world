@@ -66,7 +66,7 @@ var Tribe = {
 	 */
 	getColor : function ()
 	{
-		return new SVG.Color(hsvToRgb({
+		return new SVG.Color(utils.hsvToRgb({
 			h : this.culture,
 			s : this.population/HexWorld.maxPopulation*0.8 + 0.1,
 			v : (this.patience/(this.maxPatience))*0.8 + 0.2
@@ -279,7 +279,7 @@ var Tribe = {
 	 */
 	getGrowth : function (tile)
 	{
-		return getLogistic(
+		return utils.getLogistic(
 			Tribe.maxStarve,
 			Tribe.maxGrowth,
 			Tribe.growthRate,

@@ -17,8 +17,7 @@ module.exports = function (grunt) {
 					'document' : true,
 				}
 			},
-			beforeconcat : ['js/*.js'],
-			afterconcat : ['js/dist/*.js'],
+			beforeconcat : ['js/*.js']
 		},
 		uglify: {
 			options : {
@@ -75,6 +74,15 @@ module.exports = function (grunt) {
 				src : 'js/*.js',
 				dest : 'doc'
 			}
+		},
+
+		karma : {
+			default : {
+				options : {
+					configFile : 'karma.conf.js',
+					browsers : ['Firefox'] // svg doesn't work in PhantomJS
+				}
+			}
 		}
 	});
 
@@ -83,7 +91,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-jsdoc');
+	grunt.loadNpmTasks('grunt-karma');
 
-	grunt.registerTask('default', ['jshint:beforeconcat', 'jsdoc', 'uglify']);
+	grunt.registerTask('default', ['karma', 'jshint:beforeconcat', 'jsdoc', 'uglify']);
 	grunt.registerTask('dist', ['default', 'copy:package']);
 };

@@ -14,14 +14,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	var fieldNames = ['width', 'height', 'tileRadius', 'numTribes'];
 
 	for (var i = 0; i < fieldNames.length; i++) {
-		var param = getParameterByName(fieldNames[i]);
+		var param = utils.getParameterByName(fieldNames[i]);
 
 		if (param) {
 			config[fieldNames[i]] = param;
 		}
 	}
 
-	var wrapX = getParameterByName('wrapX') == 'on';
+	var wrapX = utils.getParameterByName('wrapX') == 'on';
 	config.wrapX = wrapX;
 
 	var world = Object.create(HexWorld).init(config);

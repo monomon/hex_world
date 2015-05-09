@@ -40,7 +40,7 @@ drawRegularPoly : function(ctx, numPoints, position, radius)
  */
 drawHex : function(ctx, position, radius)
 {
-	return drawRegularPoly(ctx, 6, position, radius);
+	return utils.drawRegularPoly(ctx, 6, position, radius);
 },
 
 /**

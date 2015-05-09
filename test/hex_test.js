@@ -10,11 +10,11 @@ describe('hex_world', function() {
 	};
 
 	beforeEach(function() {
-		// create element in which svg will be inserted
-		var rootEl = document.createElement('div');
-		rootEl.id = 'hex';
-		document.documentElement.appendChild(rootEl);
+		// jasmine.getFixtures().fixturesPath = 'test';
 
+		// loadFixtures('fixture.html');
+
+		setFixtures('<div id="hex">			</div>	<nav id="main" class="panel">		<div class="handle"></div>		<button name="start">start</button>		<button name="stop">stop</button>		<button name="reset">reset</button>		<ul id="tribeConfig" class="inputList">			<li><label for="maxGrowth">maxGrowth</label><input type="number" step="0.01" name="maxGrowth"></li>			<li><label for="maxStarve">maxStarve</label><input type="number" step="0.01" name="maxStarve"></li>			<li><label for="growthRate">growthRate</label><input type="number" step="0.01" name="growthRate"></li>			<li><label for="growthAsymptote">growthAsymptote</label><input type="number" step="0.01" name="growthAsymptote"></li>			<li><label for="decisionPeriod">decisionPeriod</label><input type="number" step="50" name="decisionPeriod"></li>			<li><label for="showText">show text<br>(might slow things down)</label><input type="checkbox" name="showText"></li>			<li><button name="newGrid">create new grid</button></li>		</ul>	</nav>	<form id="worldCreateForm" class="panel">		<h3>create a new world</h3>		<ul class="inputList">		    <li><label for="width">width</label><input type="number" name="width" value="20" placeholder=""></li>		    <li><label for="height">height</label><input type="number" name="height" value="20" placeholder=""></li>		    <li><label for="tileRadius">tileRadius</label><input type="number" name="tileRadius" value="30" placeholder=""></li>		    <li><label for="numTribes">numTribes</label><input type="number" name="numTribes" value="36" placeholder=""></li>		    <li><label for="wrapX">wrapX</label><input type="checkbox" checked name="wrapX"></li>		</ul>		<button type="submit">create</button>	</form>	<a href="https://github.com/monomon/hex_world.git"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>');
 	});
 
 	afterEach(function() {
@@ -136,4 +136,33 @@ describe('hex_world', function() {
 
 	});
 
+	describe('GUI', function () {
+		// mock the menu html
+		beforeEach(function () {
+			world = Object.create(HexWorld).init(defaultConfig);
+
+			var ui = Object.create(WorldControls).init({
+				world : world,
+				rootEl : document.querySelector('nav#main'),
+				outputEl : document.querySelector('.stats')
+			});
+		});
+
+		it('can click all buttons without throwing an exception', function () {
+			var buttons = [
+				document.querySelector('button[name=start]'),
+				document.querySelector('button[name=stop]'),
+				document.querySelector('button[name=reset]')
+			];
+
+
+			buttons.forEach(function(item) {
+				// console.log(item.click);
+				function clickButt () {
+					return item.click();
+				}
+				expect(clickButt).not.toThrow();	
+			});
+		});
+	});
 });

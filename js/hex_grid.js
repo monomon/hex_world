@@ -51,7 +51,7 @@ var HexGrid = {
 		console.assert(this.height);
 		console.assert(this.tileRadius);
 
-		this.hexBounds = hexBounds(this.tileRadius);
+		this.hexBounds = utils.hexBounds(this.tileRadius);
 
 		this.ctx = SVG(config.elId);
 
@@ -110,7 +110,7 @@ var HexGrid = {
 
 		var position = this.gridToCoords(tile.gridPos);
 
-		return drawHex(
+		return utils.drawHex(
 			this.tilesGroup,
 			position,
 			this.tileRadius
@@ -178,7 +178,7 @@ var HexGrid = {
 	getNeighbors : function(centerTile)
 	{
 		var neighbors = [];
-		var cubeCoords = offsetToCube(centerTile.gridPos);
+		var cubeCoords = utils.offsetToCube(centerTile.gridPos);
 
 		for (var i = 0; i < 3; i++) {
 			for (var j = 1; j < 3; j++) {
@@ -188,7 +188,7 @@ var HexGrid = {
 				newCoords[Number((i+j)%newCoords.length)] -= 1;
 				// console.log(JSON.stringify(cubeCoords), 'cube coords');
 				// console.log(JSON.stringify(newCoords), 'new coords');
-				var offsetCoords = cubeToOffset(newCoords);
+				var offsetCoords = utils.cubeToOffset(newCoords);
 
 				if (this.wrapX) {
 					// wrap x around

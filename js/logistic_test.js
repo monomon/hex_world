@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function (evt) {
 
-
 	var width = 400;
 	var height = 200;
 	var svgCtx = SVG('hex');

@@ -6,6 +6,8 @@ An artificial life simulation
 
 [live demo](http://monomon.me/hex_world)
 
+[read the api docs](http://monomon.me/hex_world/doc)
+
 ## Introduction
 
 hex_world is a 'zero-player' game. Automated agents run around in this world, trying to achieve better conditions. Patterns emerge that depend on how the terrain is configured.
