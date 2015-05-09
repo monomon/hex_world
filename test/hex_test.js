@@ -131,7 +131,7 @@ describe('hex_world', function() {
 				}
 
 				expect(neighbors.length).toEqual(testData[i].numNeighbors);
-			}	
+			}
 		});
 
 	});
@@ -161,7 +161,7 @@ describe('hex_world', function() {
 				function clickButt () {
 					return item.click();
 				}
-				expect(clickButt).not.toThrow();	
+				expect(clickButt).not.toThrow();
 			});
 		});
 	});
