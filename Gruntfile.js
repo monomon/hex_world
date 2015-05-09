@@ -22,7 +22,7 @@ module.exports = function (grunt) {
 		},
 		uglify: {
 			options : {
-				banner : '/*\n<%= pkg.name %>\n<%= pkg.authors %>\n<%= grunt.template.today("yyyy-mm-dd") %>\n*/\n'
+				banner : '/*\n<%= pkg.name %> <%= pkg.version %>\n<%= pkg.authors %>\n<%= grunt.template.today("yyyy-mm-dd") %>\n*/\n'
 			},
 			build : {
 				src : [
@@ -55,6 +55,10 @@ module.exports = function (grunt) {
 						expand: true,
 						src: ['index.html', 'hex.css'],
 						dest: 'dist'
+					}, {
+						expand: true,
+						src: ['doc/**'],
+						dest: 'dist'
 					}
 				]
 			}
@@ -62,7 +66,15 @@ module.exports = function (grunt) {
 
 		clean: {
 			build : ['js/dist'],
-			dist : ['dist']
+			dist : ['dist'],
+			doc : ['doc']
+		},
+
+		jsdoc : {
+			default : {
+				src : 'js/*.js',
+				dest : 'doc'
+			}
 		}
 	});
 
@@ -70,7 +82,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-jsdoc');
 
-	grunt.registerTask('default', ['jshint:beforeconcat', 'uglify']);
+	grunt.registerTask('default', ['jshint:beforeconcat', 'jsdoc', 'uglify']);
 	grunt.registerTask('dist', ['default', 'copy:package']);
 };
