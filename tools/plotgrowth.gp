@@ -3,7 +3,7 @@
 lowerAsymptote = -0.9
 upperAsymptote = 1.1
 growthAsymptote = 0.5
-growthRate = 4
+growthRate = 1.4
 
 logistic(lA, uA, g, gA, time) = lA + ((uA - lA) / ((1 + exp(-g*time))**(1/gA)))
 

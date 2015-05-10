@@ -2,9 +2,9 @@
  * @lends Tribe#
  */
 var Tribe = {
-	maxGrowth : 1.1,
+	maxGrowth : 1,
 	maxStarve : -0.9,
-	growthRate : 1.2,
+	growthRate : 1.4,
 	growthAsymptote : 0.50,
 	decisionPeriod : 1500,
 	colonyPopulationFraction : 0.4,
