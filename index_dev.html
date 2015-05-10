@@ -5,8 +5,10 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>hex_world</title>
 	<link rel="stylesheet" href="hex.css">
+	<!-- build:[src]:dist vendor/ -->
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="bower_components/svg.js/dist/svg.js"></script>
+	<!-- /build -->
 	<script src="js/dist/hex_world.min.js"></script>
 	<script src="js/hex_demo.js"></script>
 </head>
@@ -26,6 +28,7 @@
 			<li><label for="growthAsymptote">growthAsymptote</label><input type="number" step="0.01" name="growthAsymptote"></li>
 			<li><label for="decisionPeriod">decisionPeriod</label><input type="number" step="50" name="decisionPeriod"></li>
 			<li><label for="showText">show text<br>(might slow things down)</label><input type="checkbox" name="showText"></li>
+			<li><label for="showTerrain">light switch</label><input type="checkbox" name="showTerrain"></li>
 			<li><button name="newGrid">create new grid</button></li>
 		</ul>
 	</nav>

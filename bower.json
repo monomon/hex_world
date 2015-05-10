@@ -5,7 +5,7 @@
     "Mois Moshev <mois@monomon.me>"
   ],
   "description": "An artificial life simulation",
-  "main": ["hex_world.js", "hex_grid.js", "tribe.js", "utils.js"],
+  "main": ["hex_world.js", "hex_grid.js", "tribe.js", "world_controls.js", "utils.js"],
   "keywords": [
     "simulation",
     "life",

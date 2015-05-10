@@ -4,11 +4,11 @@
 var Tribe = {
 	maxGrowth : 1.1,
 	maxStarve : -0.9,
-	growthRate : 1.5,
+	growthRate : 1.2,
 	growthAsymptote : 0.50,
 	decisionPeriod : 1500,
-	colonyPopulationFraction : 0.3,
-	maxPatience : 500,
+	colonyPopulationFraction : 0.4,
+	maxPatience : 700,
 	showTextFlag : false,
 
 	/**
@@ -82,7 +82,8 @@ var Tribe = {
 	{
 		var color = this.getColor();
 		this.mask.style({
-			fill : color.toHex()
+			fill : color.toHex(),
+			stroke : '#ffffff'
 		});
 
 		if (this.showTextFlag) this.text.text(this.getText());
@@ -167,8 +168,7 @@ var Tribe = {
 		if (this.temperature > this.patience || gains[0].gain > currentGain) {
 			for (var i = 0; i < gains.length; i++) {
 
-				if (gains[i].tile === this.tile ||
-					this.world.tileElToTribe.has(gains[i].tile.el)) {
+				if (this.world.tileElToTribe.has(gains[i].tile.el)) {
 					// fighting will be around here
 					this.temperature = 0;
 					continue;
@@ -183,8 +183,9 @@ var Tribe = {
 					return;
 				}
 
-				if ((this.population >= HexWorld.maxPopulation*0.7) ||
-					gains[i].gain >= currentGain
+				if (this.population >= HexWorld.maxPopulation*0.7 &&
+					(gains[i].gain >= currentGain) ||
+					((gains[i].gain >= (currentGain/2) && Math.random() > 0.7))
 				) {
 					this.colonize(gains[i].tile);
 					this.lastDecision = time;
@@ -273,7 +274,7 @@ var Tribe = {
 
 	/**
 	 * Calculate the growth on a tile
-	 * This depends on the tile's yield and 
+	 * This depends on the tile's yield and the current population
 	 * @param {Tile} tile
 	 * @return {Number}
 	 */
@@ -284,7 +285,8 @@ var Tribe = {
 			Tribe.maxGrowth,
 			Tribe.growthRate,
 			Tribe.growthAsymptote,
-			Math.sqrt(tile.value*this.population)/HexWorld.maxPopulation
+			// Math.sqrt(tile.value*this.population)/HexWorld.maxPopulation
+			(tile.value + this.population)/(2*HexWorld.maxPopulation)
 		);
 	},
 
@@ -315,16 +317,16 @@ var Tribe = {
 			{
 				// if unpopulated
 				var overlay = neighbors[j].el.clone();
-				this.neighborsGroup.addClass('neighborOverlay');
-				this.neighborsGroup.add(overlay);
+				// this.neighborsGroup.add(overlay);
 				overlay.style({
 					fill : '#a11',
-					opacity : 0.2
+					opacity : 0.4
 				});
 			} else {
 				// do smth else
 			}
 		}
+		this.neighborsGroup.addClass('neighborOverlay');
 	},
 
 	/**
@@ -334,6 +336,7 @@ var Tribe = {
 	{
 		if (this.neighborsGroup) {
 			this.neighborsGroup.clear();
+			this.neighborsGroup.removeClass('neighborOverlay');
 		}
 	}
 };

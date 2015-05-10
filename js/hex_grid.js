@@ -24,6 +24,7 @@ var Tile = {
 var HexGrid = {
 	propsToCopy : ['width', 'height', 'tileRadius', 'wrapX'],
 	tileStroke : '#ffffff',
+	showTerrainFlag : true,
 
 	/**
 	 * HexGrid represents the grid
@@ -102,11 +103,18 @@ var HexGrid = {
 	 */
 	drawTile : function(tile)
 	{
+		var color;
+		var tileStroke = HexGrid.tileStroke;
 		// TODO: get perlin noise here
 		// for now just monochrome
-		var color = new SVG.Color({
-			r : tile.value, g : tile.value, b : tile.value
-		});
+		if (this.showTerrainFlag) {
+			color = new SVG.Color({
+				r : tile.value, g : tile.value, b : tile.value
+			});
+		} else {
+			color = new SVG.Color({r:0,g:0,b:0});
+			tileStroke = '#222222';
+		}
 
 		var position = this.gridToCoords(tile.gridPos);
 
@@ -118,24 +126,8 @@ var HexGrid = {
 		.addClass('hex')
 		.style({
 			fill : color.toHex(),
-			stroke : this.tileStroke
+			stroke : tileStroke
 		});
-	},
-
-	/**
-	 * Convert grid to screen coordinates
-	 * @param {Array} gridPos An array containing the two grid coordinates
-	 * @return {Array} array containing screen coordinates
-	 */
-	gridToCoords : function(gridPos)
-	{
-		// odd rows are indented by half a width
-		// ideally we'd use radial positions here but for now, hack...
-		var bias = ((gridPos[1] % 2) !== 0) ? 0.5 : 0;
-		return [
-			(gridPos[0] % this.width + bias + 0.5) * this.hexBounds.width + 1,
-			(gridPos[1] * (this.hexBounds.height*0.75)) + 0.5 * this.hexBounds.height + 1
-		];
 	},
 
 	/**
@@ -166,6 +158,50 @@ var HexGrid = {
 		tile.el = this.drawTile(tile);
 
 		return tile;
+	},
+
+	showTerrain : function()
+	{
+		this.tiles.forEach(function(tile) {
+			var color = new SVG.Color({
+				r : tile.value, g : tile.value, b : tile.value
+			});
+
+			tile.el.style({
+				fill : color.toHex(),
+				stroke : HexGrid.tileStroke
+			});
+		});
+
+		this.showTerrainFlag = true;
+	},
+
+	hideTerrain : function()
+	{
+		this.tiles.forEach(function(tileEl) {
+			tileEl.el.style({
+				fill : '#000000',
+				stroke : '#222222'
+			});
+		});
+
+		this.showTerrainFlag = false;
+	},
+
+	/**
+	 * Convert grid to screen coordinates
+	 * @param {Array} gridPos An array containing the two grid coordinates
+	 * @return {Array} array containing screen coordinates
+	 */
+	gridToCoords : function(gridPos)
+	{
+		// odd rows are indented by half a width
+		// ideally we'd use radial positions here but for now, hack...
+		var bias = ((gridPos[1] % 2) !== 0) ? 0.5 : 0;
+		return [
+			(gridPos[0] % this.width + bias + 0.5) * this.hexBounds.width + 1,
+			(gridPos[1] * (this.hexBounds.height*0.75)) + 0.5 * this.hexBounds.height + 1
+		];
 	},
 
 	/**

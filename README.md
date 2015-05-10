@@ -64,7 +64,7 @@ Controls are created separately, to make it easier to create standalone worlds, 
 * bug where tribes colonize on tiles 1 tile away - should be only immediate neighbors
 * plot populations and other parameters against time
 * implement violence
-* implement cooperation - similar 'cultures' (i.e. how close their hues are)
+* implement cooperation - similar 'cultures' (i.e. how close their hues are) may share surplus food
 * better terrain generation, use Perlin noise or smth
 * change growth function (at runtime)
 * record and playback
